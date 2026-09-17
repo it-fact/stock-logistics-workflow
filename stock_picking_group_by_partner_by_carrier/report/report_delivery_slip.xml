@@ -198,4 +198,29 @@
             </p>
         </xpath>
     </template>
+
+    <!-- Widen the Ordered/Delivered header columns so quantity + unit of
+         measure + packaging ("200,00 m ( 2 Rolle )") no longer wraps onto
+         an awkward extra line once the Produkt column (name, attributes,
+         customer article number) pushes them narrow. Targets the header
+         row only (stock.report_delivery_document), independent of the
+         separately-overridden <tr> bodies for the done/aggregated case,
+         to avoid touching that already layered chain. -->
+    <template
+        id="report_delivery_document_column_widths"
+        inherit_id="stock.report_delivery_document"
+    >
+        <xpath expr="//th[@name='th_sm_ordered']" position="attributes">
+            <attribute name="style">width: 12%;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_sm_quantity']" position="attributes">
+            <attribute name="style">width: 12%;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_sml_qty_ordered']" position="attributes">
+            <attribute name="style">width: 12%;</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_sml_quantity']" position="attributes">
+            <attribute name="style">width: 12%;</attribute>
+        </xpath>
+    </template>
 </odoo>
