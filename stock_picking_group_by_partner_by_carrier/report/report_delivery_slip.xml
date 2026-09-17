@@ -223,4 +223,41 @@
             <attribute name="style">width: 12%;</attribute>
         </xpath>
     </template>
+
+    <!-- Wider columns alone don't stop the quantity and its unit of measure
+         from wrapping apart ("200,00" / "m ( 2" / "Rolle )"), because the
+         plain whitespace between those two <span> siblings is itself a
+         break point. Wrap qty+uom in a single non-breaking span so they
+         always stay together; the packaging suffix "( n Rolle )" may still
+         wrap onto its own line. Must apply after report_attributes_vertically
+         (priority 100) has replaced the base <tr>, same reasoning as
+         product_customerinfo_reports' customs-section fix. Scoped to the
+         done/aggregated case only (this is what ST_OUT_00736 renders). -->
+    <template
+        id="report_delivery_aggregated_move_lines_qty_uom_nowrap"
+        inherit_id="stock.stock_report_delivery_aggregated_move_lines"
+        priority="110"
+    >
+        <xpath expr="//td[@name='move_line_aggregated_qty_ordered']/span[1]" position="replace">
+            <span style="white-space: nowrap;">
+                <span
+                    t-esc="aggregated_lines[line]['qty_ordered']"
+                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"
+                />
+                <span t-esc="aggregated_lines[line]['product_uom'].name" />
+            </span>
+        </xpath>
+        <xpath expr="//td[@name='move_line_aggregated_qty_ordered']/span[2]" position="replace" />
+
+        <xpath expr="//td[@name='move_line_aggregated_quantity']/t/span[1]" position="replace">
+            <span style="white-space: nowrap;">
+                <span
+                    t-esc="aggregated_lines[line]['quantity']"
+                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"
+                />
+                <span t-esc="aggregated_lines[line]['product_uom'].name" />
+            </span>
+        </xpath>
+        <xpath expr="//td[@name='move_line_aggregated_quantity']/t/span[2]" position="replace" />
+    </template>
 </odoo>
